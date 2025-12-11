@@ -1,0 +1,123 @@
+/* https://github.com/mgmeyers/obsidian-style-settings */
+/* @settings
+
+name: Graph Banner
+id: graph-banner
+settings:
+  - id: banner-height
+    title: Banner Height
+    description: The height of the banner. (e.g. 20vh, 200px)
+    type: variable-text
+    default: 14vh
+
+*/
+
+:root {
+	--banner-margin-bottom: 16px;
+}
+
+.graph-banner-content {
+	width: auto;
+	height: var(--banner-height, 14vh) !important;
+	margin-block-end: var(--banner-margin-bottom);
+	border: 2px solid transparent;
+
+	& > .graph-banner-overlay {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+	}
+
+	&[data-interactive="true"] {
+		border: 2px solid var(--color-accent);
+	}
+	&:not([data-interactive="true"]) > canvas {
+		pointer-events: none;
+	}
+}
+
+.hidden {
+	display: none;
+}
+
+/* Prevents layout shift */
+.inline-title:not(.markdown-embed-content .inline-title):not(
+	:has(+ .graph-banner-content)
+) {
+	margin-block-end: calc(
+		var(--banner-height, 14vh) + var(--banner-margin-bottom)
+			+ var(--inline-title-margin-bottom)
+	);
+}
+
+/* Smooth fade-in and fixed height behaviour */
+.graph-banner-content {
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 150ms ease-out, transform 150ms ease-out;
+}
+
+.graph-banner-content.graph-banner-visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Compact mode (e.g. editor) */
+.graph-banner-content.graph-banner-compact {
+    height: calc(var(--banner-height, 14vh) * 0.7) !important;
+}
+
+/* Simplified mobile mode */
+.graph-banner-content.graph-banner-mobile-simplified {
+    height: calc(var(--banner-height, 14vh) * 0.6) !important;
+    filter: brightness(0.9) contrast(0.9);
+}
+
+/* Theme adaptation */
+.theme-dark .graph-banner-content {
+    filter: brightness(0.9);
+}
+
+.theme-light .graph-banner-content {
+    filter: contrast(1.05);
+}
+
+
+
+/* Graph Banner settings button */
+.graph-banner-settings-button {
+    position: absolute;
+    bottom: 6px;
+    right: 8px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 1px solid var(--background-modifier-border);
+    background-color: var(--background-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    cursor: pointer;
+    opacity: 0.5;
+    z-index: 10;
+    pointer-events: auto;
+    transition: opacity 120ms ease-out, transform 120ms ease-out;
+}
+
+.graph-banner-settings-button::before {
+    content: '⚙';
+}
+
+.graph-banner-content:hover .graph-banner-settings-button {
+    opacity: 1;
+    transform: translateY(-1px);
+}
+
+/* When interactive, let pointer events through the overlay
+   so the underlying graph canvas gets drag events. */
+.graph-banner-content[data-interactive="true"] > .graph-banner-overlay {
+    pointer-events: none;
+}
